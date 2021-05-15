@@ -6,16 +6,17 @@ const {
     GraphQLString,
     GraphQLInt,
     GraphQLSchema,
-    GraphQLList
+    GraphQLList,
+    GraphQLNonNull
 } = graphql;
 
 // define company type
 const CompanyType = new GraphQLObjectType({
     name: "Company",
     fields: () => ({
-        id: {type: GraphQLString},
-        name: {type: GraphQLString},
-        description: {type: GraphQLString},
+        id: { type: GraphQLString },
+        name: { type: GraphQLString },
+        description: { type: GraphQLString },
         users: {
             type: new GraphQLList(UserType),
             resolve(parentValue, args) {
@@ -57,7 +58,7 @@ const RootQuery = new GraphQLObjectType({
         },
         company: {
             type: CompanyType,
-            args: {id: {type: GraphQLString}},
+            args: { id: { type: GraphQLString } },
             resolve(parentValue, args) {
                 return axios.get(`http://localhost:3000/companies/${args.id}`)
                     .then(resp => resp.data)
@@ -66,6 +67,25 @@ const RootQuery = new GraphQLObjectType({
     }
 })
 
+const mutation = new GraphQLObjectType({
+    name: 'Mutation',
+    fields: {
+        addUser: {
+           type: UserType,
+           args:  {
+               firstName: {type: new GraphQLNonNull(GraphQLString)},
+               age: {type: new GraphQLNonNull(GraphQLInt)},
+               companyId: {type: GraphQLString}
+           },
+           resolve(parentValue, {firstName, age}) {
+                return axios.post(`http://localhost:3000/users`, {firstName, age})
+                    .then(res => res.data);
+           } 
+        }
+    }
+})
+
 module.exports = new GraphQLSchema({
-    query: RootQuery
+    query: RootQuery,
+    mutation: mutation
 })
