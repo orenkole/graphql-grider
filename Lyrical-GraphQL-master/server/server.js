@@ -31,5 +31,3 @@ const webpackConfig = require('../webpack.config.js');
 app.use(webpackMiddleware(webpack(webpackConfig)));
 
 module.exports = app;
-
-/// mongodb+srv://orenkole:7NhIcHBLkomZiz8t@grider-graphql.qsk6q.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
