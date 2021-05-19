@@ -31,5 +31,3 @@ const webpackConfig = require('../webpack.config.js');
 app.use(webpackMiddleware(webpack(webpackConfig)));
 
 module.exports = app;
-
-//609fe62b2fdf483f317b9dda song id
